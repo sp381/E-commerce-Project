@@ -63,16 +63,16 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
-  Category.update(req.body, 
+  Category.update(
     {
       category_name: req.body.category_name
     }, 
     {
     where: {
-      id: req.params.id,
+      id: req.params.id
     },
     })
-});
+})
 
 .then(dbCategoryData => {
   if (!dbCategoryData[0]) {
@@ -88,6 +88,23 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete a category by its `id` value
+  Category.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(dbCategoryData => {
+    if (!dbCategoryData) {
+    res.status(404).json({ message: 'No cateogry with this id value'});
+    return;
+    }
+    res.json(dbCategoryData);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  })
 });
+
 }),
 module.exports = router;
